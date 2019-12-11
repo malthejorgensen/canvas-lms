@@ -2482,5 +2482,18 @@ describe CoursesController do
       expect(json[0]).to include({ "id" => student1.id, "group_ids" => [group1.id] })
       expect(json[1]).to include({ "id" => student2.id, "group_ids" => [group2.id] })
     end
+
+    it 'returns enrollments when passed to `include[]`' do
+      user_session(teacher)
+      get 'users', params: {
+        course_id: course.id,
+        format: 'json',
+        include: ['enrollments'],
+      }
+      json = json_parse(response.body)
+      expect(json[0]).to have_key("enrollments")
+      # expect(json[0]).to include({ "id" => student1.id, "enrollments" => [{ "type" => "StudentEnrollment" }] })
+      # expect(json[1]).to include({ "id" => student2.id, "group_ids" => [group2.id] })
+    end
   end
 end
